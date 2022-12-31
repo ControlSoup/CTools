@@ -1,162 +1,150 @@
 /*
 Linear Algebra 0.1 
 
-Date: 12.29.22
+Date: 12.31.22
 
-Series of functions to perform lienar algebra operations
+Series of functions to perform linear algebra operations on microcontrollers
+
+This library might be improved with the proper use of dynamic memory allocation,
+in an attempt to avoid possible fragmentation, I have avoided using functions like
+malloc()/calloc() to only operate on the stack. Orignially I based
 
 copied by : Joe Wilson
 
-Notes:  
+Notes: 
     Coded as needed in personal projects
-    Generalization is currently not working
-
+    
 Source:
-    Based on https://www.andreinc.net/2021/01/20/writing-your-own-linear-algebra-matrix-library-in-c
+    Dynamic linear algebra library->  https://www.andreinc.net/2021/01/20/writing-your-own-linear-algebra-matrix-library-in-c
 
 
 */
 #include <stdio.h>
 #include <stdlib.h>
 
-#define rowcolumn2array(i,j,num_col) i * num_col + j
+// Conversion from [row][col] to array[x]
+#define rowcol2matrix(i,j,num_col) (i * num_col + j) 
 
 typedef unsigned int u_int;
 
 /*
 ================
 Matrix Operations
+
+All alogirhtms for operations are based on for loops(), this could be massivly improved upon
+
+Notes:
+    In this file, a matrix is defined by a double[]
+    in order to properly use these functions 
+    there are two variables are required:
+
+        - num_row (u_int) = Number of rows in the matrix
+        - num_col (u_int) = Number of collumns in the matrix
+
+    Optionally another is often useful:
+
+        - arrlen  (u_int) = num_row * num_col
+    
+    I keep track of these with the following macro definitions at the top of the file,
+    this is my way of sudo intializating the matrix (and allowing for customization later):
+
+        #define matname_num_row i
+        #define matname_num_col j
+        #define matname_arrlen matname_num_row * matname_num_col
+
+    To initalize the matrix, simply initialze a double[] with the proper size.
+    I also format the intialization brackets in the dimensions to help with readability 
+    and debugging:
+
+        double matrix[matname_arrlen] = {a11,a12
+                                         a21,a22}
+    
+    To perform an operation, you must populate a result[] matrix with the correct length for the function.
+    Then pass both the input matrix and result to the function to modify the result.
+    See each function for its requirment. Eg:
+
+        double matrix[matname_arrlen] = {a11,a12
+                                         a21,a22}
+        double result[matname_arrlen];
+        mattranspose(num_row,num_col,matrix,result); // Modifies result[] with the tranpose of matrix
 ================
 */
 
-typedef struct{
-    u_int num_row;
-    u_int num_col;
-    double* element;
-} matrix;
-
-matrix matzero(u_int m, u_int n){
-    double* elements;
+void matprint(u_int num_row, u_int num_col, 
+              double matrix[num_row*num_col]){
+    /*
+    Overview: 
+        Prints the elements of a matrix to the terminal
+    Inputs:
+        num_row (u_int)                   = Number of rows in the input matrix
+        num_col (u_int)                   = Number of collumns in input the matrix
+        matrix  (double[num_row*num_col]) = Input matrix
+    */
     u_int i,j;
-    for (i  = 1; i <= m; i++){
-        for (j = 1; j <= n; j++){
-            elements[rowcolumn2array(i,j,n)] = 0.0;
-        }
-    }
-    matrix result = {m,n,elements};
-    return result;
-}
-
-matrix mateye(u_int c){
-    double* elements;
-    u_int i,j;
-    for (i  = 1; i <= c; i++){
-        for (j = 1; j <= c; j++){
-            if (i==j){
-                elements[rowcolumn2array(i,j,c)] = 1.0;
-            }
-            else elements[rowcolumn2array(i,j,c)] = 0.0;
-        }
-    }
-    matrix result = {c,c,elements};
-    return result;
-}
-
-double matget_element(matrix input_matrix, u_int i, u_int j){
-    if ((i > input_matrix.num_col) || (j > input_matrix.num_row) || (i < 1) || (j < 1)){
-        perror("Coordinate must be inside the matrix\n");
-        exit(-1);
-    }   
-    return input_matrix.element[rowcolumn2array(i,j,input_matrix.num_col)];
-}
-
-double* matget_row(matrix input_matrix, u_int j){
-    if ((j > input_matrix.num_row ) || (j < 1)){
-        perror("Row must exist inside the matrix\n");
-        exit(-1);
-    }
-
-    double* row;
-    u_int i;
-    for (i = 1; i <= input_matrix.num_col; i++){
-        row[j] = matget_element(input_matrix,i,j);
-    }
-
-    return row;
-}
-
-double* matget_col(matrix input_matrix, u_int i){
-    if ((i > input_matrix.num_row) || (i < 1)){
-        printf("Column must exist inside the matrix\n");
-        exit(-1);
-    }
-
-    double* col;
-    u_int j;
-    for (j = 1; j <= input_matrix.num_row; j++){
-        col[j] = matget_element(input_matrix,i,j);
-    }
-
-    return col;
-}
-
-
-
-matrix matconst(matrix input_matrix, double constant){
-    u_int i,j;
-    double* elements;
-    for (i = 1; i <= input_matrix.num_col; i++){
-        for(j = 1; j <= input_matrix.num_row; j++){
-            elements[i * input_matrix.num_col + j] *= constant;
-        }
-    }
-    matrix result = {input_matrix.num_row,input_matrix.num_col,elements};
-    return result;
-}
-
-matrix matadd(matrix matrix_1, matrix matrix_2){
-    if ((matrix_1.num_col != matrix_2.num_col) || (matrix_1.num_row != matrix_2.num_row)){
-        printf("Both Matrixs need to be the same size\n");
-        exit(-1);
-    }
-
-    u_int i,j;
-    double* elements;
-    for (i = 1; i <= matrix_1.num_row; i++){
-        for(j = 1; j <= matrix_1.num_col; j++){
-            elements[rowcolumn2array(i,j,matrix_1.num_col)] = 
-            matget_element(matrix_1,i,j) + matget_element(matrix_2,i,j);
-        }
-    }
-    matrix result = {matrix_1.num_row,matrix_1.num_col,elements};
-    return result;
-}
-
-matrix matsubtract(matrix matrix_1, matrix matrix_2){
-    if ((matrix_1.num_col != matrix_2.num_col) || (matrix_1.num_row != matrix_2.num_row)){
-        printf("Both Matrixs need to be the same size\n");
-        exit(-1);
-    }
-
-    u_int i,j;
-    double* elements;
-    for (i=1; i <= matrix_1.num_row; i++){
-        for(j=1; j <= matrix_1.num_col; j++){
-            elements[rowcolumn2array(i,j,matrix_1.num_col)] = matget_element(matrix_1,i,j) - matget_element(matrix_2,i,j);
-        }
-    }
-    matrix result = {matrix_1.num_row,matrix_1.num_col,elements};
-    return result;
-}
-
-
-void print_matrix(matrix input_matrix){
-    u_int i,j;
-    for (i = 1; i <= input_matrix.num_row; i++){
+    printf("-\n");
+    for (i = 0; i < num_row; i++){
         printf("[");
-        for (j = 1; j <= input_matrix.num_col; j++){
-            printf(" %lf ",matget_element(input_matrix,i,j));
+        for (j = 0; j < num_col; j++){
+            printf(" %lf ",matrix[rowcol2matrix(i,j,num_col)]);
         }
         printf("]\n");
+    }
+    printf("-\n");
+}
+
+void matzeros(u_int num_row, u_int num_col, 
+              double result[num_row*num_col]){
+    /*
+    Overview:
+        Modifies the contents of result[num_row*num_col] with zeros
+    Inputs:
+        num_row (u_int)                   = Number of rows in the input matrix
+        num_col (u_int)                   = Number of collumns in input the matrix
+        result  (double[num_row*num_col]) = Result matrix, that is to be modified
+    */
+   u_int i,j;
+   for (i = 0; i < num_row; i++){
+        for (j = 0; j < num_col; j++){
+            result[rowcol2matrix(i,j,num_col)] = 0.0;
+        }
+    }
+}
+
+void mateye(u_int num_row_and_num_col, 
+            double result[num_row_and_num_col*num_row_and_num_col]){
+    /*
+    Overview:
+        Modifies the contents of result[num_row*num_col] with and idenity matrix
+    Inputs:
+        num_row (u_int)                   = Number of rows in the input matrix
+        num_col (u_int)                   = Number of collumns in input the matrix
+        result  (double[num_row*num_col]) = Result matrix, that is to be modified
+    */
+   u_int i,j;
+   for (i = 0; i < num_row_and_num_col; i++){
+        for (j = 0; j < num_row_and_num_col; j++){
+            if (i == j) result[rowcol2matrix(i,j,num_row_and_num_col)] = 1.0;
+            else        result[rowcol2matrix(i,j,num_row_and_num_col)] = 0.0;
+        }
+    }
+}
+
+void mattranspose(u_int num_row, u_int num_col, 
+                  double matrix[num_row*num_col],
+                  double result[num_row*num_col]){
+    /*
+    Overview:
+        Modifies the contents of result[num_row*num_col] with the transpose of matrix[num_row*num_col]
+    Inputs:
+        num_row (u_int)                   = Number of rows in the input matrix
+        num_col (u_int)                   = Number of collumns in input the matrix
+        matrix  (double[num_row*num_col]) = Input matrix
+        result  (double[num_row*num_col]) = Result matrix, that is to be modified
+    */
+   u_int i,j;
+   for (i = 0; i < num_row; i++){
+        for (j = 0; j < num_col; j++){
+            result[rowcol2matrix(j,i,num_col)] = matrix[rowcol2matrix(i,j,num_col)];
+        }
     }
 }
