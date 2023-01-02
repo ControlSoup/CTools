@@ -10,16 +10,7 @@ void test_matprint(){
     double test_matrix[test_arrlen] = {1.0,2.0,
                                        3.0,4.0};
     matprint(test_num_row,test_num_col,test_matrix);
-
-    // Test 2 (1x4)
-    // {1.0,2.0,3.0,4.0};
     matprint(1,4,test_matrix);
-
-    //Test 3 (4x1)
-    //{1.0,
-    // 2.0,
-    // 3.0,
-    // 4.0};    
     matprint(4,1,test_matrix);
 }
 
@@ -84,12 +75,6 @@ void test_matadd(){
 
 void test_matmul(){
     printf("~~~ matmul() ~~~\n");
-    #define test1_num_row 2
-    #define test1_num_col 2
-    #define test1_arrlen test1_num_row*test1_num_col
-    #define test2_num_row 2
-    #define test2_num_col 2
-    #define test2_arrlen test2_num_row*test2_num_col
     double test1_matrix[test1_arrlen] = {1.0,2.0,
                                          3.0,4.0};
     double test2_matrix[test2_arrlen] = {1.0,2.0,
@@ -110,13 +95,10 @@ void test_error_matmul(){
     #define error_row 4
     #define error_col 1
     #define error_len error_row*error_col
-    #define test2_num_row 2
-    #define test2_num_col 2
-    #define test2_arrlen test2_num_row*test2_num_col
-    double test1_matrix[error_len] = {1.0,2.0,
-                                         3.0,4.0};
-    double test2_matrix[test2_arrlen] = {1.0,2.0,
-                                         3.0,4.0};
+    double test1_matrix[error_len]    = {1,2,
+                                         3,4};
+    double test2_matrix[test2_arrlen] = {1,2,
+                                         3,4};
     double  test_result[error_len];
     matprint(error_row,error_col,test1_matrix);
     printf("        *\n");
@@ -128,6 +110,16 @@ void test_error_matmul(){
     matprint(error_row,error_col,test_result);
 }
 
+void test_matinv(){
+    printf("~~~ test_matinv() ~~~\n");
+    double test_matrix[9] = {1,  1,  3,
+                             1,  3, -3,
+                            -2, -4, -4};
+    double test_result[9];
+    matinv(3,test_matrix,test_result);
+    
+}
+
 int main(){
-    test_error_matmul();
+    test_matinv();
 }

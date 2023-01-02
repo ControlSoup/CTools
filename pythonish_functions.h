@@ -1,3 +1,4 @@
+
 void arange(double start, double end, double increment, double array){
     /*
     This function replaces the contents of "array" with incremented

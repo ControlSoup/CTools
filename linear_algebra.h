@@ -70,7 +70,7 @@ Notes:
 ================
 */
 
-void matprint(u_int num_row, u_int num_col, 
+void matprint(u_int  num_row, u_int num_col, 
               double matrix[num_row*num_col]){
     /*
     Overview: 
@@ -92,8 +92,8 @@ void matprint(u_int num_row, u_int num_col,
     printf("-\n");
 }
 
-void matzero(u_int num_row, u_int num_col, 
-              double result[num_row*num_col]){
+void matzero(u_int  num_row, u_int num_col, 
+             double result[num_row*num_col]){
     /*
     Overview:
         Modifies the contents of result[] with zeros
@@ -109,7 +109,7 @@ void matzero(u_int num_row, u_int num_col,
     }
 }
 
-void mateye(u_int num_row_and_num_col, 
+void mateye(u_int  num_row_and_num_col, 
             double result[num_row_and_num_col*num_row_and_num_col]){
     /*
     Overview:
@@ -128,7 +128,7 @@ void mateye(u_int num_row_and_num_col,
     
 }
 
-void mattranspose(u_int num_row, u_int num_col, 
+void mattranspose(u_int  num_row, u_int num_col, 
                   double matrix[num_row*num_col],
                   double result[num_row*num_col]){
     /*
@@ -144,14 +144,72 @@ void mattranspose(u_int num_row, u_int num_col,
     u_int i,j;
     for (i = 0; i < num_row; i++) 
     for (j = 0; j < num_col; j++){
-            result[rowcol2matrix(j,i,num_col)] = matrix[rowcol2matrix(i,j,num_col)];
+        result[rowcol2matrix(j,i,num_col)] = matrix[rowcol2matrix(i,j,num_col)];
     }
 }
 
-void mattadd(u_int num_row, u_int num_col,
-            double m1[num_row*num_col],
-            double m2[num_row*num_col],
-            double result[num_row*num_col]){
+void matinv(u_int  num_dim,
+            double matrix[num_dim*num_dim],
+            double result[num_dim*num_dim]){
+    /*
+    Overview:
+        Modifies the contents of result[] with inverse of the input matrix[]
+    
+    Input:
+        num_rowandcol (u_int)                   = Number of rows in the input matrix
+        matrix        (double[num_row*num_row]) = Input matrix
+        result        (double[num_row*num_row]) = Result matrix, that is to be modified
+    Source:
+        https://www.codesansar.com/numerical-methods/matrix-inverse-using-gauss-jordan-method-c-program.htm
+    */
+    u_int gaus_col = (num_dim+num_dim);
+    double gaus_aug[2*num_dim*num_dim];
+    double ratio;
+
+    // Augmented matrix with an Identity matrix
+    u_int i,j,k;
+    for (i = 0; i < num_dim; i++) 
+    for (j = 0; j < gaus_col; j++){
+        if (j < num_dim) gaus_aug[rowcol2matrix(i,j,gaus_col)] =  matrix[rowcol2matrix(i,j,num_dim)];
+        else if (j - num_dim == i) gaus_aug[rowcol2matrix(i,j,gaus_col)] = 1.0;
+        else gaus_aug[rowcol2matrix(i,j,gaus_col)] = 0.0;
+    }  
+    printf(" Augmented matrix: \n ");
+    matprint(num_dim,gaus_col,gaus_aug);
+    // Gaus elimination
+    for (i = 0; i < num_dim; i++){
+        if (gaus_aug[rowcol2matrix(i,i,gaus_col)] == 0.0){
+            perror(" Guas Jordan Error!");
+            printf("matrix[%lf] at coordinates [%d,%d] = %lf\n",rowcol2matrix(i,i,gaus_col),i,i,
+                                                                gaus_aug[rowcol2matrix(i,i,gaus_col)]);
+            exit(0);
+        }
+        for (j =0; j < num_dim; j++){
+            if (i != j){
+                ratio = gaus_aug[rowcol2matrix(j,i,gaus_col)]/gaus_aug[rowcol2matrix(i,i,gaus_col)];
+                for (k = 0; k < gaus_col; k ++){
+                    gaus_aug[rowcol2matrix(j,k,gaus_col)] -= 
+                    ratio/gaus_aug[rowcol2matrix(i,j,gaus_col)];
+                }
+            } 
+        }
+    } 
+
+    // Make principal diagnol 
+    for(i = 0;i < num_dim; i++)
+    for(j = num_dim;j < gaus_col; j++){
+        gaus_aug[rowcol2matrix(i,j,gaus_col)] /= 
+        gaus_aug[rowcol2matrix(i,i,gaus_col)];
+    }
+    printf(" Resulting matrix: \n ");
+    matprint(num_dim,gaus_col,gaus_aug);
+    
+}
+
+void mattadd(u_int  num_row, u_int num_col,
+             double m1[num_row*num_col],
+             double m2[num_row*num_col],
+             double result[num_row*num_col]){
     /*
     Overview:
         Modifies the contents of result[] with the matrix addition of m1[] and m2[]
@@ -164,18 +222,17 @@ void mattadd(u_int num_row, u_int num_col,
         result     (double[num_row*num_col]) = Result matrix, that is to be modified
     */
 
-   u_int i,j;
-   for (i = 0; i < num_row; i++) 
-   for (j = 0; j < num_col; j++){
-           result[rowcol2matrix(i,j,num_col)] = 
-           m1[rowcol2matrix(i,j,num_col)] + m2[rowcol2matrix(i,j,num_col)];
-   }
-    
+    u_int i,j;
+    for (i = 0; i < num_row; i++) 
+    for (j = 0; j < num_col; j++){
+        result[rowcol2matrix(i,j,num_col)] = 
+        m1[rowcol2matrix(i,j,num_col)] + m2[rowcol2matrix(i,j,num_col)];
+    }
 }
 
-void matmul(u_int m1_num_row, u_int m1_num_col,
+void matmul(u_int  m1_num_row, u_int m1_num_col,
             double m1[m1_num_row*m1_num_col],
-            u_int m2_num_row, u_int m2_num_col,
+            u_int  m2_num_row, u_int m2_num_col,
             double m2[m2_num_row*m2_num_col],
             double result[m1_num_row*m2_num_col]){
     /*
@@ -195,7 +252,7 @@ void matmul(u_int m1_num_row, u_int m1_num_col,
     // Check that matrix multiplication is possible
     if (m1_num_col != m2_num_row){
         perror("m1_num_col != m2_num_row, matmul is not possible");
-        exit(-1);
+        exit(0);
     }
 
     matzero(m1_num_row,m2_num_col,result); //ensure result is zero
@@ -207,5 +264,5 @@ void matmul(u_int m1_num_row, u_int m1_num_col,
         result[rowcol2matrix(i,j,m2_num_col)] +=  
         m1[rowcol2matrix(i,k,m1_num_col)] * m2[rowcol2matrix(k,j,m2_num_col)];
     }
-    
 }
+
