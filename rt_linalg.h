@@ -58,29 +58,8 @@ Macros
 ================
 Matrix Operations
 
-All alogirhtms for operations are based on for loops, this could be improved upon
-
 Notes:
-    In this file, a matrix is defined by a float[]. In order to properly use these functions, 
-    you need to initalize the matrix with its dimentions in the first two elemnts of the list:
-
-    matrix[] = {3,3,
-                a00,a01,a02,
-                a11,a11,a12}
-
-    I have diverged from the traditional formatting to make visualizing these array matrixs a 
-    little easier. 
-
-    To perform an operation, you must populate a result[] matrix and ideally using the correct 
-    length for the function. Then pass both the input matrix and result to the function to modify 
-    the
-     result. See each function for its requirment.
-    
-    float matrix[dim2arrlen(2,2)] = {a11,a12
-                                        a21,a22}
-    float result[dim2arrlen(2,2)];
-    mattranspose(matrix,result); // Modifies result[] with the tranpose of matrix
-
+    All alogirhtms for operations are based on for loops, this could be improved upon
 ================
 */
 
