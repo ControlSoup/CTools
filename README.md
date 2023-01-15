@@ -9,7 +9,7 @@ functions on real time and emebedded systems.
 # Usage
 In this file, a matrix is defined by a float[]. In order to properly use these functions, 
 you need to initalize the matrix with its dimentions in the first two elemnts of the list:
-'''C
+'''cpp
 matrix[] = {3,3,
             a00,a01,a02,
             a10,a11,a12,
@@ -23,7 +23,7 @@ length for the function. Then pass both the input matrix and result to the funct
 the result. See each function for its requirment.
 
 Matmul Example:
-'''c
+'''cpp
 printf("~~~ mamtmul() ~~~\n");
 float test_matrix1[dim2arrlen(3,3)] = {3,3,
                                        1,2,3,
