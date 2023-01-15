@@ -9,7 +9,7 @@ This library might be improved with the proper use of dynamic memory allocation,
 in an attempt to avoid possible fragmentation, I have avoided using functions like
 malloc()/calloc() to only operate on the stack.
 
-copied by : Joe Wilson
+by: Joe Wilson
 
 Notes: 
     Coded as needed in personal projects
@@ -19,68 +19,92 @@ Source:
 
 
 */
+
+/*
+================
+Macros
+================
+*/
+
+// Includes
+#ifndef _STDIO_H_
+#define _STDIO_H_
 #include <stdio.h>
+#endif
+
+#ifndef _STDLIB_H_
+#define _STDLIB_H_
 #include <stdlib.h>
+#endif
 
-// Conversion from [row][col] to array[x]
-#define rowcol2matrix(i,j,num_col) (i * num_col + j) 
+#ifndef _ERRNO_H_
+#define _ERRNO_H_
+#include <errno.h>
+#endif
 
-typedef unsigned int u_int;
+#ifndef _MATH_H_
+#define _MATH_H_
+#include <math.h>
+#endif
+
+
+// Readablity Macros
+#define rows 0
+#define cols 1
+
+// Converts the dimesions of a matrix, to its equivlanet array length
+#define dim2arrlen(i,j) (2 + (i * j))
+
+// Converts the row collumn coordinate to a matrix array coordinate
+#define rowcol2matrix(i,j,num_col) (2 + (i * num_col + j)) 
+
+// Ensure the result has the correct dimensions in its first two elements
+#define adjust_result_dim(i,j,result) do{\
+    if (result[rows] != i) result[rows] = i;\
+    if (result[cols] != i) result[cols] = i;\
+    } while(0)
+
 
 /*
 ================
 Matrix Operations
 
-All alogirhtms for operations are based on for()), this could be massivly improved upon
+All alogirhtms for operations are based on for loops, this could be massivly improved upon
 
 Notes:
-    In this file, a matrix is defined by a double[]
-    in order to properly use these functions 
-    there are two variables are required:
+    In this file, a matrix is defined by a float[] in order to properly use these functions, 
+    you need to initalize the matrix with its dimentions in the first two elemnts of the list:
 
-        - num_row (u_int) = Number of rows in the matrix
-        - num_col (u_int) = Number of collumns in the matrix
+    matrix[] = {3,3,
+                a00,a01,a02,
+                a11,a11,a12}
 
-    Optionally another is often useful:
+    I have diverged from the traditional formatting to make visualizing these array matrixs a 
+    little easier. 
 
-        - arrlen  (u_int) = num_row * num_col
-    
-    I keep track of these with the following macro definitions at the top of the file,
-    this is my way of sudo intializating the matrix (and allowing for customization later):
-
-        #define matname_num_row i
-        #define matname_num_col j
-        #define matname_arrlen matname_num_row * matname_num_col
-
-    To initalize the matrix, simply initialze a double[] with the proper size.
-    I also format the intialization brackets in the dimensions to help with readability 
-    and debugging:
-
-        double matrix[matname_arrlen] = {a11,a12
-                                         a21,a22}
-    
     To perform an operation, you must populate a result[] matrix with the correct length for the function.
     Then pass both the input matrix and result to the function to modify the result.
-    See each function for its requirment. Eg:
-
-        double matrix[matname_arrlen] = {a11,a12
-                                         a21,a22}
-        double result[matname_arrlen];
+    See each function for its requirment. 
+    
+    Eg:
+        float matrix[dim2arrlen(2,2)] = {a11,a12
+                                          a21,a22}
+        float result[matname_arrlen];
         mattranspose(num_row,num_col,matrix,result); // Modifies result[] with the tranpose of matrix
 ================
 */
 
-void matprint(u_int  num_row, u_int num_col, 
-              double matrix[num_row*num_col]){
+void matprint(float matrix[]){
     /*
     Overview: 
         Prints the elements of a matrix to the terminal
     Inputs:
-        num_row (u_int)                   = Number of rows in the input matrix
-        num_col (u_int)                   = Number of collumns in input the matrix
-        matrix  (double[num_row*num_col]) = Input matrix
+        matrix = Input matrix
     */
-    u_int i,j;
+    int num_row = matrix[rows];
+    int num_col = matrix[cols];
+
+    unsigned int i,j;
     printf("-\n");
     for (i = 0; i < num_row; i++){
         printf("[");
@@ -92,34 +116,34 @@ void matprint(u_int  num_row, u_int num_col,
     printf("-\n");
 }
 
-void matzero(u_int  num_row, u_int num_col, 
-             double result[num_row*num_col]){
+void matzero(unsigned int  num_row, unsigned int num_col, 
+             float result[dim2arrlen(num_col,num_col)]){
     /*
     Overview:
         Modifies the contents of result[] with zeros
     Inputs:
-        num_row (u_int)                   = Number of rows in the input matrix
-        num_col (u_int)                   = Number of collumns in input the matrix
-        result  (double[num_row*num_col]) = Result matrix, that is to be modified
+        num_row = Number of rows in the input matrix
+        num_col = Number of collumns in input the matrix
+        result  = Result matrix, that is to be modified
     */
-    u_int i,j;
+
+    unsigned int i,j;
     for (i = 0; i < num_row; i++) 
     for (j = 0; j < num_col; j++){
         result[rowcol2matrix(i,j,num_col)] = 0.0;
     }
 }
 
-void mateye(u_int  num_row_and_num_col, 
-            double result[num_row_and_num_col*num_row_and_num_col]){
+void mateye(unsigned int  num_row_and_num_col, 
+            float result[dim2arrlen(num_row_and_num_col,num_row_and_num_col)]){
     /*
     Overview:
         Modifies the contents of result[] with and idenity matrix
     Inputs:
-        num_row (u_int)                   = Number of rows in the input matrix
-        num_col (u_int)                   = Number of collumns in input the matrix
-        result  (double[num_row*num_col]) = Result matrix, that is to be modified
+        num_row = Number of rows in the input matrix
+        result  = Result matrix, that is to be modified
     */
-    u_int i,j;
+    unsigned int i,j;
     for (i = 0; i < num_row_and_num_col; i++) 
     for (j = 0; j < num_row_and_num_col; j++){
         if (i == j) result[rowcol2matrix(i,j,num_row_and_num_col)] = 1.0;
@@ -128,136 +152,97 @@ void mateye(u_int  num_row_and_num_col,
     
 }
 
-void mattranspose(u_int  num_row, u_int num_col, 
-                  double matrix[num_row*num_col],
-                  double result[num_row*num_col]){
+void mattranspose(float matrix[], float result[]){
     /*
     Overview:
-     Modifies the contents of result[] with the transpose of matrix[num_row*num_col]
+        Modifies the contents of result[] with the transpose of matrix[num_row*num_col]
     Inputs:
-     num_row (u_int)                   = Number of rows in the input matrix
-     num_col (u_int)                   = Number of collumns in input the matrix
-     matrix  (double[num_row*num_col]) = Input matrix
-     result  (double[num_row*num_col]) = Result matrix, that is to be modified
+        matrix = Input matrix
+        result = Result matrix, that is to be modified
     */
-
-    u_int i,j;
+    unsigned int num_row = matrix[rows], num_col = matrix[cols];
+    adjust_result_dim(num_row,num_col,result); 
+   
+    unsigned int i,j;
     for (i = 0; i < num_row; i++) 
     for (j = 0; j < num_col; j++){
         result[rowcol2matrix(j,i,num_col)] = matrix[rowcol2matrix(i,j,num_col)];
     }
 }
 
-void matinv(u_int  num_dim,
-            double matrix[num_dim*num_dim],
-            double result[num_dim*num_dim]){
-    /*
-    Overview:
-        Modifies the contents of result[] with inverse of the input matrix[]
-    
-    Input:
-        num_rowandcol (u_int)                   = Number of rows in the input matrix
-        matrix        (double[num_row*num_row]) = Input matrix
-        result        (double[num_row*num_row]) = Result matrix, that is to be modified
-    Source:
-        https://www.codesansar.com/numerical-methods/matrix-inverse-using-gauss-jordan-method-c-program.htm
-    */
-    u_int gaus_col = (num_dim+num_dim);
-    double gaus_aug[2*num_dim*num_dim];
-    double ratio;
-
-    // Augmented matrix with an Identity matrix
-    u_int i,j,k;
-    for (i = 0; i < num_dim; i++) 
-    for (j = 0; j < gaus_col; j++){
-        if (j < num_dim) gaus_aug[rowcol2matrix(i,j,gaus_col)] =  matrix[rowcol2matrix(i,j,num_dim)];
-        else if (j - num_dim == i) gaus_aug[rowcol2matrix(i,j,gaus_col)] = 1.0;
-        else gaus_aug[rowcol2matrix(i,j,gaus_col)] = 0.0;
-    }  
-    printf(" Augmented matrix: \n ");
-    matprint(num_dim,gaus_col,gaus_aug);
-    // Gaus elimination
-    for (i = 0; i < num_dim; i++){
-        if (gaus_aug[rowcol2matrix(i,i,gaus_col)] == 0.0){
-            perror(" Guas Jordan Error!");
-            printf("matrix[%lf] at coordinates [%d,%d] = %lf\n",rowcol2matrix(i,i,gaus_col),i,i,
-                                                                gaus_aug[rowcol2matrix(i,i,gaus_col)]);
-            exit(0);
-        }
-        for (j =0; j < num_dim; j++){
-            if (i != j){
-                ratio = gaus_aug[rowcol2matrix(j,i,gaus_col)]/gaus_aug[rowcol2matrix(i,i,gaus_col)];
-                for (k = 0; k < gaus_col; k ++){
-                    gaus_aug[rowcol2matrix(j,k,gaus_col)] -= 
-                    ratio/gaus_aug[rowcol2matrix(i,j,gaus_col)];
-                }
-            } 
-        }
-    } 
-
-    // Make principal diagnol 
-    for(i = 0;i < num_dim; i++)
-    for(j = num_dim;j < gaus_col; j++){
-        gaus_aug[rowcol2matrix(i,j,gaus_col)] /= 
-        gaus_aug[rowcol2matrix(i,i,gaus_col)];
-    }
-    printf(" Resulting matrix: \n ");
-    matprint(num_dim,gaus_col,gaus_aug);
-    
-}
-
-void mattadd(u_int  num_row, u_int num_col,
-             double m1[num_row*num_col],
-             double m2[num_row*num_col],
-             double result[num_row*num_col]){
+void matadd(float m1[], float m2[], float result[]){
     /*
     Overview:
         Modifies the contents of result[] with the matrix addition of m1[] and m2[]
         
     Input:
-        num_row    (u_int)                   = Number of rows in the first input matrix
-        num_col    (u_int)                   = Number of columns in the first input matrix
-        m1         (double[num_row*num_col]) = First input matrix
-        m2         (double[num_row*num_col]) = Secound input matrix
-        result     (double[num_row*num_col]) = Result matrix, that is to be modified
+        m1     = First input matrix
+        m2     = Secound input matrix
+        result = Result matrix, that is to be modified
     */
+    
 
-    u_int i,j;
+    unsigned int num_row = m1[rows], num_col = m1[cols];
+
+    if ((num_row != m2[rows]) || (num_col != m2[cols])){
+            printf("ERROR : Matrix dimensions are not equal!\n");
+            exit(-1);
+    } 
+
+    adjust_result_dim(num_row,num_col,result);
+    
+    unsigned int i,j;
     for (i = 0; i < num_row; i++) 
     for (j = 0; j < num_col; j++){
-        result[rowcol2matrix(i,j,num_col)] = 
-        m1[rowcol2matrix(i,j,num_col)] + m2[rowcol2matrix(i,j,num_col)];
+        result[rowcol2matrix(i,j,num_col)] = m1[rowcol2matrix(i,j,num_col)] + m2[rowcol2matrix(i,j,num_col)];
     }
 }
 
-void matmul(u_int  m1_num_row, u_int m1_num_col,
-            double m1[m1_num_row*m1_num_col],
-            u_int  m2_num_row, u_int m2_num_col,
-            double m2[m2_num_row*m2_num_col],
-            double result[m1_num_row*m2_num_col]){
+void matadd_const(float matrix[], float constant, float result[]){
+    /*
+    Overview:
+        Modifies the contents of result[] with addition of matrix[] and constant
+        
+    Input:
+        matrix = First input matrix
+        m2     = Secound input matrix
+        result = Result matrix, that is to be modified
+    */
+    unsigned int num_row = matrix[rows], num_col = matrix[cols];
+
+    adjust_result_dim(num_row,num_col,result);
+    
+    unsigned int i,j;
+    for (i = 0; i < num_row; i++) 
+    for (j = 0; j < num_col; j++){
+        result[rowcol2matrix(i,j,num_col)] = matrix[rowcol2matrix(i,j,num_col)] + constant;
+    }
+}
+
+void matmul(float m1[], float m2[], float result[]){
     /*
     Overview:
         Modifies the contents of result[] with the matrix multiplication of m1[] and m2[]
        
     Input:
-        m1_num_row (u_int)                         = Number of rows in the first input matrix
-        m2_num_col (u_int)                         = Number of columns in the first input matrix
-        m1         (double[m1_num_row*m1_num_row]) = First input matrix
-        m1_num_row (u_int)                         = Number of rows in the secound input matrix
-        m2_num_col (u_int)                         = Number of columns in the secound input matrix
-        m2         (double[m2_num_row*m2_num_row]) = Secound input matrix
-        result     (double[m1_num_row*m2_num_row]) = Result matrix, that is to be modified
+        m1     = First input matrix
+        m2     = Secound input matrix
+        result = Result matrix, that is to be modified
     */
     
-    // Check that matrix multiplication is possible
-    if (m1_num_col != m2_num_row){
-        perror("m1_num_col != m2_num_row, matmul is not possible");
-        exit(0);
-    }
+    unsigned int m1_num_row = m1[rows], m1_num_col = m1[cols];
+    unsigned int m2_num_row = m2[rows], m2_num_col = m2[cols];
 
+    // Check that matrix multiplication is possible
+    if (m1_num_row != m2_num_col){
+        printf("ERROR : m1_num_row != m2_num_col, matmul is not possible");
+        exit(-1);
+    }
+    adjust_result_dim(m1_num_col,m2_num_col,result);
+    
     matzero(m1_num_row,m2_num_col,result); //ensure result is zero
 
-    u_int i,j,k;
+    unsigned int i,j,k;
     for (i = 0; i < m1_num_row; i++) 
     for (j = 0; j < m2_num_col; j++) 
     for (k = 0; k < m1_num_col; k++){
@@ -265,4 +250,27 @@ void matmul(u_int  m1_num_row, u_int m1_num_col,
         m1[rowcol2matrix(i,k,m1_num_col)] * m2[rowcol2matrix(k,j,m2_num_col)];
     }
 }
+
+void matmul_const(float matrix[], float constant, float result[]){
+    /*
+    Overview:
+        Modifies the contents of result[] with product of matrix[] andconst
+        
+    Input:
+        matrix = First input matrix
+        m2     = Secound input matrix
+        result = Result matrix, that is to be modified
+    */
+    unsigned int num_row = matrix[rows], num_col = matrix[cols];
+
+    adjust_result_dim(num_row,num_col,result);
+    
+    unsigned int i,j;
+    for (i = 0; i < num_row; i++) 
+    for (j = 0; j < num_col; j++){
+        result[rowcol2matrix(i,j,num_col)] = matrix[rowcol2matrix(i,j,num_col)] * constant;
+    }
+    
+}
+
 
