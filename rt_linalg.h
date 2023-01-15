@@ -1,18 +1,11 @@
 /*
 Linear Algebra 0.1 
 
-Date: 12.31.22
+Version: 0.1
 
 Series of functions to perform linear algebra operations on microcontrollers
 
-This library might be improved with the proper use of dynamic memory allocation,
-in an attempt to avoid possible fragmentation, I have avoided using functions like
-malloc()/calloc() to only operate on the stack.
-
 by: Joe Wilson
-
-Notes: 
-    Coded as needed in personal projects
     
 Source:
     Dynamic linear algebra library->  https://www.andreinc.net/2021/01/20/writing-your-own-linear-algebra-matrix-library-in-c
