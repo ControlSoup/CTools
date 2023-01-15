@@ -23,7 +23,7 @@ length for the function. Then pass both the input matrix and result to the funct
 the result. See each function for its requirment.
 
 Matmul Example:
-'''C
+'''c
 printf("~~~ mamtmul() ~~~\n");
 float test_matrix1[dim2arrlen(3,3)] = {3,3,
                                        1,2,3,
@@ -37,6 +37,7 @@ float test_result[dim2arrlen(3,3)];
 matmul(test_matrix1,test_matrix2,test_result);
 matprint(test_result);
 '''
+
 Outputs:
 
 '''
