@@ -37,17 +37,6 @@ Macros
 #include <stdlib.h>
 #endif
 
-#ifndef _ERRNO_H_
-#define _ERRNO_H_
-#include <errno.h>
-#endif
-
-#ifndef _MATH_H_
-#define _MATH_H_
-#include <math.h>
-#endif
-
-
 // Readablity Macros
 #define rows 0
 #define cols 1
@@ -69,10 +58,10 @@ Macros
 ================
 Matrix Operations
 
-All alogirhtms for operations are based on for loops, this could be massivly improved upon
+All alogirhtms for operations are based on for loops, this could be improved upon
 
 Notes:
-    In this file, a matrix is defined by a float[] in order to properly use these functions, 
+    In this file, a matrix is defined by a float[]. In order to properly use these functions, 
     you need to initalize the matrix with its dimentions in the first two elemnts of the list:
 
     matrix[] = {3,3,
@@ -82,15 +71,16 @@ Notes:
     I have diverged from the traditional formatting to make visualizing these array matrixs a 
     little easier. 
 
-    To perform an operation, you must populate a result[] matrix with the correct length for the function.
-    Then pass both the input matrix and result to the function to modify the result.
-    See each function for its requirment. 
+    To perform an operation, you must populate a result[] matrix and ideally using the correct 
+    length for the function. Then pass both the input matrix and result to the function to modify 
+    the
+     result. See each function for its requirment.
     
-    Eg:
-        float matrix[dim2arrlen(2,2)] = {a11,a12
-                                          a21,a22}
-        float result[matname_arrlen];
-        mattranspose(num_row,num_col,matrix,result); // Modifies result[] with the tranpose of matrix
+    float matrix[dim2arrlen(2,2)] = {a11,a12
+                                        a21,a22}
+    float result[dim2arrlen(2,2)];
+    mattranspose(matrix,result); // Modifies result[] with the tranpose of matrix
+
 ================
 */
 

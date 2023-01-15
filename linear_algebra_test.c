@@ -1,4 +1,4 @@
-#include "linear_algebra.h"
+#include "rt_linalg.h"
 
 void test_matprint(){
     printf("~~~ matprint() ~~~\n");
@@ -28,7 +28,7 @@ void test_mateye(){
 
 void test_mattranspose(){
     printf("~~~ mattranspose() ~~~\n");
-    
+
     float test_matrix[dim2arrlen(3,3)] = {3,3,
                                           1,2,3,
                                           4,5,6,
