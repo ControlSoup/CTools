@@ -9,12 +9,14 @@ functions on real time and emebedded systems.
 # Usage
 In this file, a matrix is defined by a float[]. In order to properly use these functions, 
 you need to initalize the matrix with its dimentions in the first two elemnts of the list:
-'''cpp
+
+```cpp
 matrix[] = {3,3,
             a00,a01,a02,
             a10,a11,a12,
             a20,a21,a22}
-'''
+```
+
 I have diverged from the traditional formatting to make visualizing these array matrixs a 
 little easier. 
 
@@ -23,7 +25,8 @@ length for the function. Then pass both the input matrix and result to the funct
 the result. See each function for its requirment.
 
 Matmul Example:
-'''cpp
+
+```cpp
 printf("~~~ mamtmul() ~~~\n");
 float test_matrix1[dim2arrlen(3,3)] = {3,3,
                                        1,2,3,
@@ -36,16 +39,17 @@ float test_matrix2[dim2arrlen(3,3)] = {3,3,
 float test_result[dim2arrlen(3,3)];
 matmul(test_matrix1,test_matrix2,test_result);
 matprint(test_result);
-'''
+```
+
 
 Outputs:
 
-'''
+```
 ~~~ mamtmul() ~~~
 -
 [ 30.000000  36.000000  42.000000 ]
 [ 66.000000  81.000000  96.000000 ]
 [ 102.000000  126.000000  150.000000 ]
 -
-'''
+```
 
