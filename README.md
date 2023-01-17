@@ -3,6 +3,8 @@ These are a set of C files that I use commonly for C/C++ an Ardunio projects.
 
 ## rt_linalg.h 
 
+### Implementation:
+
 This is the only file that I currently use, it handles generalized linear algebra 
 functions on real time and emebedded systems. 
 
@@ -70,7 +72,7 @@ Outputs:
 -
 ```
 
-#To Do:
+### To Do:
 - mat_inv() compute the inverse of a matrix
 - gaus_elim() performs gaussian elimination 
 
