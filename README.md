@@ -70,3 +70,7 @@ Outputs:
 -
 ```
 
+#To Do:
+- mat_inv() compute the inverse of a matrix
+- gaus_elim() performs gaussian elimination 
+
