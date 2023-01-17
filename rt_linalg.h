@@ -42,7 +42,7 @@ Macros
 // Ensure the result has the correct dimensions in its first two elements
 #define adjust_result_dim(i,j,result) do{\
     if (result[rows] != i) result[rows] = i;\
-    if (result[cols] != i) result[cols] = i;\
+    if (result[cols] != j) result[cols] = j;\
     } while(0)
 
 
