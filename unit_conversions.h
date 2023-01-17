@@ -1,5 +1,5 @@
 /*
-Unit Conversion factors 0.1 
+Unit Conversion factors 0.1 (needs) more work
 
 Date: 11.20.22
 
@@ -23,8 +23,8 @@ Source:
 #define _m2in_ = 1 / _in2m_
 
 #define _lbm2kg_ = 0.45
-#define _kg2lbm_ = 1/ _kg2lbm_
+#define _kg2lbm_ = 1 / _kg2lbm_
 
 #define _inlbf2J_ = 0.11298483333
-#define _J2inlbf_ = 1/_inlbf2J_
+#define _J2inlbf_ = 1 /_inlbf2J_
 
