@@ -75,4 +75,5 @@ Outputs:
 ### To Do:
 - mat_inv() compute the inverse of a matrix
 - gaus_elim() performs gaussian elimination 
+- reinvestigate the use of a struct instead of storing the first two elements as dimensions
 
