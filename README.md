@@ -13,7 +13,7 @@ malloc()/calloc() to only operate on the stack.
 A matrix is defined by a float[]. In order to properly use these functions, 
 you need to initalize the matrix with its dimentions in the first two elements:
 
-```c
+```cpp
 floatn matrix[] = {3,3,
                    a00,a01,a02,
                    a10,a11,a12,
@@ -26,7 +26,7 @@ little easier.
 There are a few important macro functions that can be used to make coordinates and 
 readability a bit better:
 
-```c
+```cpp
 // Readablity Macros
 #define rows 0
 #define cols 1
@@ -43,7 +43,7 @@ the result. See each function for its requirment.
 
 Matmul Example:
 
-```c
+```cpp
 printf("~~~ mamtmul() ~~~\n");
 float test_matrix1[dim2arrlen(3,3)] = {3,3,
                                        1,2,3,
