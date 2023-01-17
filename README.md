@@ -14,10 +14,10 @@ A matrix is defined by a float[]. In order to properly use these functions,
 you need to initalize the matrix with its dimentions in the first two elements:
 
 ```cpp
-floatn matrix[] = {3,3,
-                   a00,a01,a02,
-                   a10,a11,a12,
-                   a20,a21,a22};
+float matrix[] = {3,3,
+                  a00,a01,a02,
+                  a10,a11,a12,
+                  a20,a21,a22};
 ```
 
 I have diverged from the traditional formatting to make visualizing these array matrixs a 
