@@ -1,5 +1,5 @@
 # CTools
-These are a set of C files that I use commonly for C/C++ an Ardunio projects.
+These are a set of C files that I use commonly for C/C++ and Ardunio projects.
 
 ## rt_linalg.h 
 
